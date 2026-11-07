@@ -13,7 +13,7 @@ class Gharsa extends StatelessWidget {
       builder: (context, child) => GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
         child: MaterialApp(
-          title: "gharsa",
+          title: "Gharsa",
           debugShowCheckedModeBanner: false,
           theme: ThemeData(fontFamily: "Cairo"),
           //  onGenerateRoute: ,
