@@ -1,5 +1,4 @@
 class AppRegex {
-  // Private constructor to prevent creating objects from this class
   AppRegex._();
 
   static final RegExp _emailRegExp = RegExp(
@@ -7,8 +6,9 @@ class AppRegex {
   );
 
   static final RegExp _passwordRegExp = RegExp(
-    r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
+    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
   );
+
   static final RegExp _phoneRegExp = RegExp(r'^(010|011|012|015)[0-9]{8}$');
   static final RegExp _lowerCaseRegExp = RegExp(r'^(?=.*[a-z])');
   static final RegExp _upperCaseRegExp = RegExp(r'^(?=.*[A-Z])');

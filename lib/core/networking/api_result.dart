@@ -1,13 +1,15 @@
+import 'package:gharsa/core/networking/failure.dart';
+
 sealed class ApiResult<T> {
   const ApiResult();
 }
 
-class Success<T> extends ApiResult<T> {
+class ApiSuccess<T> extends ApiResult<T> {
+  const ApiSuccess(this.data);
   final T data;
-  const Success(this.data);
 }
 
-class Failure<T> extends ApiResult<T> {
-  final String message;
-  const Failure(this.message);
+class ApiFailure<T> extends ApiResult<T> {
+  const ApiFailure(this.failure);
+  final Failure failure;
 }
