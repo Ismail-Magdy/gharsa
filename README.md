@@ -39,7 +39,7 @@ Shared code used across features lives in `core/`.
    cd gharsa
    ```
 
-2. Create a `.env` file in the project root (see `.env.example`):
+2. Create a `.env` file in the project root (see `.env`):
 
    ```
    BASE_URL=https://agricommerce.runasp.net/api/
