@@ -8,8 +8,6 @@
 
 ---
 
-
-
 ## Tech Stack
 
 - **Framework:** Flutter (Dart 3+)
@@ -37,7 +35,7 @@ Shared code used across features lives in `core/`.
 1. Clone the repository:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Ismail-Magdy/gharsa/
    cd gharsa
    ```
 
@@ -135,3 +133,5 @@ lib/
             ├── screens/
             └── widgets/
 ```
+
+🚧 Active Development: This project is currently in the making. More features and technical documentation will be added as we progress
