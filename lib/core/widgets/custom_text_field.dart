@@ -84,7 +84,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         filled: true,
         fillColor: widget.fillColor ?? AppColors.lightGrey,
-        contentPadding: widget.contentPadding ??
+        contentPadding:
+            widget.contentPadding ??
             EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         border: _buildBorder(),
         enabledBorder: _buildBorder(),
@@ -93,8 +94,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         focusedErrorBorder: _buildBorder(color: AppColors.error),
         disabledBorder: _buildBorder(color: AppColors.grey),
         prefixIcon: widget.prefixIcon,
-        suffixIcon:
-            widget.isPassword ? _buildPasswordToggle() : widget.suffixIcon,
+        suffixIcon: widget.isPassword
+            ? _buildPasswordToggle()
+            : widget.suffixIcon,
       ),
     );
   }
@@ -102,10 +104,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
   OutlineInputBorder _buildBorder({Color? color}) {
     return OutlineInputBorder(
       borderRadius: BorderRadius.circular(widget.borderRadius ?? 12.r),
-      borderSide: BorderSide(
-        color: color ?? AppColors.lightGrey,
-        width: 1.0,
-      ),
+      borderSide: BorderSide(color: color ?? AppColors.lightGrey, width: 1.0),
     );
   }
 

@@ -52,3 +52,4 @@ app.*.map.json
 
 # Architecture rules
 clean-architecture-with-api.md
+base-core-widgets.md

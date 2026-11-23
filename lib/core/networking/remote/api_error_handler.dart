@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:gharsa/core/networking/failure.dart';
+import 'package:gharsa/core/networking/remote/failure.dart';
 
 abstract class ApiErrorHandler {
   ApiErrorHandler._();
