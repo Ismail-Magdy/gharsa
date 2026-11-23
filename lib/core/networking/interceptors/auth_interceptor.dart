@@ -1,6 +1,7 @@
-import 'package:dio/dio.dart';
-import 'package:gharsa/core/helpers/constants/storage_keys.dart';
-import 'package:gharsa/core/helpers/shared_reference_helpers/secure_storage_helper.dart';
+import "package:dio/dio.dart";
+import "package:gharsa/core/helpers/constants/storage_keys.dart";
+import "package:gharsa/core/helpers/shared_reference_helpers/secure_storage_helper.dart";
+import "package:gharsa/core/helpers/shared_reference_helpers/session_helper.dart";
 
 class AuthInterceptor extends QueuedInterceptorsWrapper {
   @override
@@ -10,7 +11,7 @@ class AuthInterceptor extends QueuedInterceptorsWrapper {
   ) async {
     final token = await SecureStorageHelper.getString(StorageKeys.userToken);
     if (token.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $token';
+      options.headers["Authorization"] = "Bearer $token";
     }
     handler.next(options);
   }
@@ -24,6 +25,7 @@ class AuthInterceptor extends QueuedInterceptorsWrapper {
   }
 
   Future<void> _handleUnauthorized() async {
-    await SecureStorageHelper.clearAll();
+    await SessionHelper.clearSession();
+    SessionHelper.notifySessionExpired();
   }
 }

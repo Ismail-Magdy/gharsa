@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 extension NavigationExtension on BuildContext {
   Future<dynamic> pushNamed(String routeName, {Object? arguments}) {

@@ -1,120 +1,249 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gharsa/core/theming/app_colors.dart';
-import 'package:gharsa/core/theming/app_fonts.dart';
-import 'package:gharsa/core/theming/font_weight_helper.dart';
+import "package:flutter/material.dart";
+import "package:flutter/services.dart";
+import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:gharsa/core/helpers/constants/app_regex.dart";
+import "package:gharsa/core/theming/app_colors.dart";
 
-class CustomTextField extends StatefulWidget {
-  const CustomTextField({
-    super.key,
-    required this.controller,
-    this.focusNode,
-    this.hintText,
-    this.labelText,
-    this.validator,
-    this.onChanged,
-    this.isPassword = false,
-    this.keyboardType,
-    this.textInputAction,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.enabled = true,
-    this.contentPadding,
-    this.maxLines = 1,
-    this.fillColor,
-    this.borderRadius,
-  });
-
-  final TextEditingController controller;
-  final FocusNode? focusNode;
-  final String? hintText;
-  final String? labelText;
-  final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
-  final bool isPassword;
-  final TextInputType? keyboardType;
-  final TextInputAction? textInputAction;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
-  final bool enabled;
-  final EdgeInsetsGeometry? contentPadding;
-  final int maxLines;
-  final Color? fillColor;
-  final double? borderRadius;
-
-  @override
-  State<CustomTextField> createState() => _CustomTextFieldState();
+/// Defines the type of the input field.
+/// This controls validation, keyboard type, and password behavior.
+enum FieldType {
+  firstName,
+  lastName,
+  phoneNumber,
+  userName,
+  email,
+  password,
+  normal,
+  number,
 }
 
-class _CustomTextFieldState extends State<CustomTextField> {
-  late bool _obscured;
+class CustomTextFormField extends StatefulWidget {
+  /// Controller used to manage the input text.
+  final TextEditingController controller;
+
+  /// Hint text displayed inside the field.
+  final String hintText;
+
+  /// Defines the field behavior.
+  final FieldType fieldType;
+
+  /// Optional icon displayed at the start of the field.
+  final IconData? prefixIcon;
+
+  /// Optional custom validator if you want to override default validation.
+  final String? Function(String?)? validator;
+
+  /// Called whenever the text changes.
+  final void Function(String)? onChanged;
+
+  /// Keyboard type override (optional).
+  final TextInputType? keyboardType;
+
+  /// Maximum number of characters allowed.
+  final int? maxLength;
+
+  /// Input formatters (useful for phone numbers, digits, etc).
+  final List<TextInputFormatter>? inputFormatters;
+
+  /// Controls auto validation behavior.
+  final AutovalidateMode autovalidateMode;
+
+  const CustomTextFormField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    this.fieldType = .normal,
+    this.prefixIcon,
+    this.validator,
+    this.onChanged,
+    this.keyboardType,
+    this.maxLength,
+    this.inputFormatters,
+    this.autovalidateMode = .onUserInteraction,
+  });
+
+  @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  /// Controls password visibility for password fields.
+  late bool obscureText;
+
+  @override
+  void didUpdateWidget(covariant CustomTextFormField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.fieldType != widget.fieldType) {
+      setState(() {
+        obscureText = widget.fieldType == .password;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _obscured = widget.isPassword;
+
+    /// Initialize password visibility only if the field is a password.
+    obscureText = widget.fieldType == .password;
+  }
+
+  /// Default validation logic based on field type.
+  String? _defaultValidator(String? value) {
+    final trimmedValue = value?.trim() ?? "";
+
+    switch (widget.fieldType) {
+      case .firstName:
+        if (trimmedValue.isEmpty) {
+          return "برجاء إدخال الاسم الأول";
+        }
+        break;
+
+      case .lastName:
+        if (trimmedValue.isEmpty) {
+          return "برجاء إدخال اسم العائلة";
+        }
+        break;
+
+      case .phoneNumber:
+        if (trimmedValue.isEmpty ||
+            !AppRegex.isPhoneNumberValid(trimmedValue)) {
+          return "برجاء إدخال رقم هاتف صحيح";
+        }
+        break;
+
+      case .userName:
+        if (trimmedValue.isEmpty) {
+          return "برجاء إدخال اسم المستخدم";
+        }
+
+        break;
+
+      case .email:
+        if (trimmedValue.isEmpty || !AppRegex.isEmailValid(trimmedValue)) {
+          return "برجاء إدخال بريد إلكتروني صحيح";
+        }
+        break;
+
+      case .password:
+        if (trimmedValue.isEmpty) {
+          return "برجاء إدخال كلمة المرور";
+        }
+        if (!AppRegex.isPasswordValid(trimmedValue)) {
+          return "يجب أن تحتوي على 8 أحرف، وحرف كبير وصغير ورقم ورمز";
+        }
+        break;
+
+      case .number:
+        if (trimmedValue.isEmpty) {
+          return "برجاء إدخال قيمة";
+        }
+        break;
+
+      case .normal:
+        return null;
+    }
+
+    return null;
+  }
+
+  /// Returns keyboard type based on field type.
+  TextInputType _getKeyboardType() {
+    if (widget.keyboardType != null) {
+      return widget.keyboardType!;
+    }
+
+    switch (widget.fieldType) {
+      case .phoneNumber:
+        return .phone;
+
+      case .email:
+        return .emailAddress;
+
+      case .number:
+        return const TextInputType.numberWithOptions(decimal: true);
+
+      default:
+        return .text;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      focusNode: widget.focusNode,
-      obscureText: _obscured,
-      enabled: widget.enabled,
-      keyboardType: widget.keyboardType,
-      textInputAction: widget.textInputAction,
-      maxLines: widget.isPassword ? 1 : widget.maxLines,
+
+      /// Use custom validator if provided, otherwise fallback to default validator.
+      validator: widget.validator ?? _defaultValidator,
+
+      /// Triggered whenever the user types.
       onChanged: widget.onChanged,
-      validator: widget.validator,
-      style: TextStyle(
-        fontFamily: AppFonts.cairo,
-        fontSize: 14.sp,
-        fontWeight: FontWeightHelper.regular,
-        color: AppColors.black,
-      ),
+
+      /// Keyboard type configuration.
+      keyboardType: _getKeyboardType(),
+
+      /// Optional max length constraint.
+      maxLength: widget.maxLength,
+
+      /// Input formatters support.
+      inputFormatters: widget.inputFormatters,
+
+      /// Hide text only for password fields.
+      obscureText: obscureText,
+
+      /// Controls when validation runs.
+      autovalidateMode: widget.autovalidateMode,
+
+      /// Text style inside the field.
+      style: TextStyle(color: AppColors.primaryColor, fontSize: 14.sp),
+
+      textAlign: .right,
+      textDirection: .rtl,
+
+      ///
       decoration: InputDecoration(
         hintText: widget.hintText,
-        labelText: widget.labelText,
-        hintStyle: TextStyle(
-          fontFamily: AppFonts.cairo,
-          fontSize: 14.sp,
-          fontWeight: FontWeightHelper.regular,
-          color: AppColors.grey,
-        ),
+
+        hintStyle: const TextStyle(color: Color(0x7F4A628A)),
+
+        /// Optional prefix icon.
+        prefixIcon: widget.prefixIcon != null
+            ? Icon(widget.prefixIcon, color: Colors.grey)
+            : null,
+
         filled: true,
-        fillColor: widget.fillColor ?? AppColors.lightGrey,
-        contentPadding:
-            widget.contentPadding ??
-            EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-        border: _buildBorder(),
-        enabledBorder: _buildBorder(),
-        focusedBorder: _buildBorder(color: AppColors.primary),
-        errorBorder: _buildBorder(color: AppColors.error),
-        focusedErrorBorder: _buildBorder(color: AppColors.error),
-        disabledBorder: _buildBorder(color: AppColors.grey),
-        prefixIcon: widget.prefixIcon,
-        suffixIcon: widget.isPassword
-            ? _buildPasswordToggle()
-            : widget.suffixIcon,
-      ),
-    );
-  }
+        fillColor: Colors.grey.withValues(alpha: 0.08),
+        //
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide.none,
+        ),
+        //
+        errorBorder: OutlineInputBorder(
+          borderRadius: .circular(14),
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+        ),
+        //
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: .circular(14),
+          borderSide: const BorderSide(color: Colors.redAccent, width: 2),
+        ),
 
-  OutlineInputBorder _buildBorder({Color? color}) {
-    return OutlineInputBorder(
-      borderRadius: BorderRadius.circular(widget.borderRadius ?? 12.r),
-      borderSide: BorderSide(color: color ?? AppColors.lightGrey, width: 1.0),
-    );
-  }
-
-  Widget _buildPasswordToggle() {
-    return IconButton(
-      onPressed: () => setState(() => _obscured = !_obscured),
-      icon: Icon(
-        _obscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-        color: AppColors.grey,
-        size: 22.r,
+        /// Password visibility toggle button.
+        suffixIcon: widget.fieldType == .password
+            ? IconButton(
+                onPressed: () {
+                  setState(() {
+                    obscureText = !obscureText;
+                  });
+                },
+                icon: Icon(
+                  obscureText ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
+                ),
+              )
+            : null,
       ),
     );
   }
