@@ -1,4 +1,4 @@
-import 'package:gharsa/core/networking/remote/failure.dart';
+import "package:gharsa/core/networking/remote/failure.dart";
 
 sealed class ApiResult<T> {
   const ApiResult();

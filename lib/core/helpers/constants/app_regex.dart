@@ -6,14 +6,14 @@ class AppRegex {
   );
 
   static final RegExp _passwordRegExp = RegExp(
-    r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$',
+    r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$",
   );
 
-  static final RegExp _phoneRegExp = RegExp(r'^(010|011|012|015)[0-9]{8}$');
-  static final RegExp _lowerCaseRegExp = RegExp(r'^(?=.*[a-z])');
-  static final RegExp _upperCaseRegExp = RegExp(r'^(?=.*[A-Z])');
-  static final RegExp _numberRegExp = RegExp(r'^(?=.*?[0-9])');
-  static final RegExp _specialCharRegExp = RegExp(r'^(?=.*?[@$!%*?&])');
+  static final RegExp _phoneRegExp = RegExp(r"^(010|011|012|015)[0-9]{8}$");
+  static final RegExp _lowerCaseRegExp = RegExp(r"^(?=.*[a-z])");
+  static final RegExp _upperCaseRegExp = RegExp(r"^(?=.*[A-Z])");
+  static final RegExp _numberRegExp = RegExp(r"^(?=.*?[0-9])");
+  static final RegExp _specialCharRegExp = RegExp(r"^(?=.*?[@$!%*?&])");
 
   static bool isEmailValid(String email) {
     return _emailRegExp.hasMatch(email);

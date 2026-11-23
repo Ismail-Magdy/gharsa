@@ -1,5 +1,5 @@
-import 'package:dio/dio.dart';
-import 'package:gharsa/core/networking/remote/failure.dart';
+import "package:dio/dio.dart";
+import "package:gharsa/core/networking/remote/failure.dart";
 
 abstract class ApiErrorHandler {
   ApiErrorHandler._();
@@ -14,21 +14,21 @@ abstract class ApiErrorHandler {
   static Failure _handleDioException(DioException error) {
     return switch (error.type) {
       DioExceptionType.connectionTimeout => const TimeoutFailure(
-        'Connection timed out',
+        "Connection timed out",
       ),
-      DioExceptionType.sendTimeout => const TimeoutFailure('Send timed out'),
+      DioExceptionType.sendTimeout => const TimeoutFailure("Send timed out"),
       DioExceptionType.receiveTimeout => const TimeoutFailure(
-        'Receive timed out',
+        "Receive timed out",
       ),
       DioExceptionType.connectionError => const NetworkFailure(
-        'No internet connection',
+        "No internet connection",
       ),
-      DioExceptionType.cancel => const NetworkFailure('Request was cancelled'),
+      DioExceptionType.cancel => const NetworkFailure("Request was cancelled"),
       DioExceptionType.badCertificate => const ServerFailure(
-        'Invalid certificate',
+        "Invalid certificate",
       ),
       DioExceptionType.badResponse => _handleBadResponse(error),
-      _ => UnknownFailure(error.message ?? 'An unexpected error occurred'),
+      _ => UnknownFailure(error.message ?? "An unexpected error occurred"),
     };
   }
 
@@ -36,13 +36,13 @@ abstract class ApiErrorHandler {
     final statusCode = error.response?.statusCode;
     final data = error.response?.data;
 
-    String message = 'An unexpected error occurred';
+    String message = "An unexpected error occurred";
 
     if (data is Map<String, dynamic>) {
-      if (data['errors'] is List && (data['errors'] as List).isNotEmpty) {
-        message = (data['errors'] as List).join('\n');
-      } else if (data['message'] is String) {
-        message = data['message'] as String;
+      if (data["errors"] is List && (data["errors"] as List).isNotEmpty) {
+        message = (data["errors"] as List).join("\n");
+      } else if (data["message"] is String) {
+        message = data["message"] as String;
       }
     }
 
