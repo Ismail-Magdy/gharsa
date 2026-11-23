@@ -19,12 +19,12 @@ class SharedPrefHelper {
       await _prefs.setStringList(key, value);
     } else {
       throw Exception(
-        'Type ${value.runtimeType} is not supported by SharedPreferences',
+        "Type ${value.runtimeType} is not supported by SharedPreferences",
       );
     }
   }
 
-  static String getString(String key) => _prefs.getString(key) ?? '';
+  static String getString(String key) => _prefs.getString(key) ?? "";
   static int getInt(String key) => _prefs.getInt(key) ?? 0;
   static double getDouble(String key) => _prefs.getDouble(key) ?? 0.0;
   static bool getBool(String key) => _prefs.getBool(key) ?? false;

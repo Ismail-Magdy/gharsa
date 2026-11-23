@@ -12,7 +12,7 @@ class SecureStorageHelper {
   }
 
   static Future<String> getString(String key) async {
-    return await _secureStorage.read(key: key) ?? '';
+    return await _secureStorage.read(key: key) ?? "";
   }
 
   static Future<void> removeData(String key) async {
