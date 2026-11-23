@@ -48,6 +48,9 @@ dependencies:
   # Environment Variables
   flutter_dotenv: ^6.0.1
 
+  # Splash Screen
+  flutter_native_splash: ^2.4.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -55,6 +58,14 @@ dev_dependencies:
   flutter_lints: ^6.0.0
   mocktail: ^1.0.4
   bloc_test: ^10.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/icon-launcher.png"
+  adaptive_icon_background: "#5F33E1"
+  adaptive_icon_foreground: "assets/icons/play-store-icon-launcher.png"
 
 flutter:
   uses-material-design: true
